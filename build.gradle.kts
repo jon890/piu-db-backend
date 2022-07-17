@@ -12,13 +12,13 @@ plugins {
 }
 
 noArg {
-	annotation("javax.persistence.Entity") // 2
+	annotation("javax.persistence.Entity")
 }
 
 allOpen {
-	annotation("javax.persistence.Entity") // 3
-	annotation("javax.persistence.MappedSuperclass") // 4
-	annotation("javax.persistence.Embeddable") // 5
+	annotation("javax.persistence.Entity")
+	annotation("javax.persistence.MappedSuperclass")
+	annotation("javax.persistence.Embeddable")
 }
 
 group = "com.bifos"
@@ -39,6 +39,9 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+
+	// JWT
+	implementation("io.jsonwebtoken:jjwt")
 
 	// Database
 	runtimeOnly("com.h2database:h2")
