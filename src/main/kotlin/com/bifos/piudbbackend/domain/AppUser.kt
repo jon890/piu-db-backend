@@ -1,5 +1,8 @@
 package com.bifos.piudbbackend.domain
 
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import java.io.Serializable
 import javax.persistence.*
 
@@ -16,7 +19,7 @@ class AppUser(
     var password: String,
 
     val piuNickname: String,
-) : Serializable {
+) : Serializable, UserDetails {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -28,5 +31,33 @@ class AppUser(
 
     fun updatePassword(newPassword: String) {
         this.password = newPassword
+    }
+
+    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
+        return this.roles.map { SimpleGrantedAuthority(it.name) }.toMutableList()
+    }
+
+    override fun getPassword(): String {
+        return password
+    }
+
+    override fun getUsername(): String {
+        return email
+    }
+
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isEnabled(): Boolean {
+        return true
     }
 }

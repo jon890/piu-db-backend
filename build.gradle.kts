@@ -41,7 +41,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
 	// JWT
-	implementation("io.jsonwebtoken:jjwt")
+	implementation("io.jsonwebtoken:jjwt:0.9.1")
 
 	// Database
 	runtimeOnly("com.h2database:h2")

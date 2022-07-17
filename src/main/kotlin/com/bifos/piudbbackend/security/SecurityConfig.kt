@@ -1,11 +1,14 @@
 package com.bifos.piudbbackend.security
 
-import com.bifos.piudbbackend.domain.repository.AppUserRepository
+import com.bifos.piudbbackend.security.jwt.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 
 /**
@@ -13,34 +16,33 @@ import org.springframework.security.web.SecurityFilterChain
  * WebSecurityConfigurerAdapter 가 Deprecated 됨 => 왜 일까?
  */
 @EnableWebSecurity
-class SecurityConfig(private val appUserRepository: AppUserRepository) {
+class SecurityConfig(
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+) {
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
-        return http.authorizeRequests()
+        return http
+            .csrf().disable()
+            .formLogin().disable()
+            .httpBasic().disable()
+            // JWT 를 사용하기 위해 Session 설정 해제
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
             // antMatchers() => o.s.s.web.util.AntPathRequestMatcher 에 의해 지원됨
             // 더 알아보려면 Apache Ant 를 참고해보자.
-            .antMatchers("/").hasAnyRole("ANONYMOUS", "USER")
-            .antMatchers("/auth/login").hasAnyRole("ANONYMOUS", "USER")
-            .antMatchers("/auth/logout").hasAnyRole("ANONYMOUS", "USER")
-            .antMatchers("/**").hasAnyRole("USER")
+            .antMatchers("/auth/**").permitAll()
+            .anyRequest().authenticated()
 
-            .and().formLogin()
-            .loginPage("/login")
-            .loginProcessingUrl("/auth/login")
-            .failureUrl("/login?error")
-            .usernameParameter("username")
-            .passwordParameter("password")
-            .defaultSuccessUrl("/")
-
-            .and().httpBasic()
-            .and().logout().logoutUrl("/auth/logout")
-            .and().csrf().disable()
+            .and()
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .build()
     }
 
     @Bean
-    fun userDetailsService(): UserDetailsService {
-        return AppUserDetailsService(appUserRepository)
+    fun passwordEncoder() : PasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }
