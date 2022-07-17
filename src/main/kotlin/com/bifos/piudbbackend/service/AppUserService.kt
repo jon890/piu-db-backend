@@ -10,6 +10,6 @@ interface AppUserService {
 
     fun findUsersByEmail(partialEmail: String): List<AppUser>
 
-    fun createUser(user: AppUser): Int
+    fun createUser(user: AppUser): Long
 
 }
