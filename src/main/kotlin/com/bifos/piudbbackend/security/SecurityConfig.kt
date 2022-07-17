@@ -3,8 +3,6 @@ package com.bifos.piudbbackend.security
 import org.springframework.context.annotation.Bean
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.core.userdetails.User
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 
 /**
@@ -36,22 +34,5 @@ class SecurityConfig {
             .and().logout().logoutUrl("/auth/logout")
             .and().csrf().disable()
             .build()
-    }
-
-    @Bean
-    fun userDetailsService(): InMemoryUserDetailsManager {
-        val user = User.withDefaultPasswordEncoder()
-            .username("bifos")
-            .password("bifos")
-            .roles("USER")
-            .build()
-
-        val admin = User.withDefaultPasswordEncoder()
-            .username("admin")
-            .password("admin")
-            .roles("USER", "ADMIN")
-            .build()
-
-        return InMemoryUserDetailsManager(user, admin)
     }
 }
