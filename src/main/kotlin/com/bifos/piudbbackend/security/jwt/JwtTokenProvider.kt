@@ -1,7 +1,10 @@
 package com.bifos.piudbbackend.security.jwt
 
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.MalformedJwtException
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.UnsupportedJwtException
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -17,9 +20,12 @@ class JwtTokenProvider(
     @Value("\${jwt.expiration}")
     private val jwtExpirationMs: Long,
 
-    private val userDetailsService: UserDetailsService
+    private val userDetailsService: UserDetailsService,
 ) {
 
+    /**
+     * JWT 토큰 생성
+     */
     fun generate(authentication: Authentication): String {
         val now = Date()
         val expiryDate = Date(now.time + jwtExpirationMs)
@@ -34,6 +40,20 @@ class JwtTokenProvider(
             .compact()
     }
 
+    /**
+     * 토큰 유효성 체크
+     */
+    @Throws(MalformedJwtException::class,
+        ExpiredJwtException::class,
+        UnsupportedJwtException::class,
+        IllegalArgumentException::class)
+    fun validate(token: String) {
+        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
+    }
+
+    /**
+     * 토큰에서 User Id 추출
+     */
     fun getUserId(token: String): String {
         val claims = Jwts.parser()
             .setSigningKey(jwtSecret)
@@ -43,10 +63,9 @@ class JwtTokenProvider(
         return claims.subject
     }
 
-    fun validate(token: String) {
-        Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token)
-    }
-
+    /**
+     * JWT 토큰을 파싱해 스프링 시큐리티에서 사용할 인증 객체로 변환한다.
+     */
     fun getAuthentication(token: String): Authentication {
         val userDetails = userDetailsService.loadUserByUsername(this.getUserId(token))
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
