@@ -13,6 +13,15 @@ spring:
     hibernate:
       ddl-auto create-drop
 
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+
 jwt:
   secret: "localjwtsecret"
   expiration: 3600000
+
+security:
+  allow-urls: /h2-console/**,/auth/**

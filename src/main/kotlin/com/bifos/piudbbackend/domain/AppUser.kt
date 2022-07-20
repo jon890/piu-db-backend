@@ -11,7 +11,7 @@ import javax.persistence.*
 class AppUser(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    val id: Long,
+    val id: Long = 0,
 
     val email: String,
 
