@@ -6,9 +6,11 @@ import com.bifos.piudbbackend.domain.repository.PiuChartRepository
 import com.bifos.piudbbackend.domain.repository.PiuVersionRepository
 import com.bifos.piudbbackend.domain.repository.SongRepository
 import com.bifos.piudbbackend.web.dto.SongRequest
+import org.springframework.stereotype.Service
 import javax.persistence.EntityNotFoundException
 import javax.transaction.Transactional
 
+@Service
 class SongServiceImpl(
     private val songRepository: SongRepository,
     private val piuVersionRepository: PiuVersionRepository,
