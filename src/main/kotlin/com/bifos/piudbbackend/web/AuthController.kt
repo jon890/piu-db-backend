@@ -1,12 +1,11 @@
-package com.bifos.piudbbackend.resource
+package com.bifos.piudbbackend.web
 
-import com.bifos.piudbbackend.resource.dto.LoginRequest
-import com.bifos.piudbbackend.resource.dto.SignInRequest
+import com.bifos.piudbbackend.web.dto.LoginRequest
+import com.bifos.piudbbackend.web.dto.SignInRequest
 import com.bifos.piudbbackend.security.jwt.JwtTokenProvider
 import com.bifos.piudbbackend.service.AppUserService
 import org.springframework.http.ResponseEntity
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping

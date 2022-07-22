@@ -1,4 +1,4 @@
-package com.bifos.piudbbackend.resource.dto
+package com.bifos.piudbbackend.web.dto
 
 import java.time.LocalDateTime
 

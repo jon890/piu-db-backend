@@ -1,7 +1,6 @@
-package com.bifos.piudbbackend.resource.dto
+package com.bifos.piudbbackend.web.dto
 
 import com.bifos.piudbbackend.domain.AppUser
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 
 class SignInRequest(
     val email: String,
